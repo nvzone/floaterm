@@ -1,0 +1,37 @@
+local M = {}
+local api = vim.api
+local state = require "floaterm.state"
+local volt_redraw = require("volt").redraw
+local shell = vim.o.shell
+
+M.convert_buf2term = function(cmd)
+  if cmd then
+    cmd = { shell, "-c", cmd .. "; " .. shell }
+  else
+    cmd = { shell }
+  end
+  vim.fn.jobstart(cmd, { detach = false, term = true })
+end
+
+M.gen_term_bufs = function()
+  for i, _ in ipairs(state.terminals) do
+    state.terminals[i].buf = api.nvim_create_buf(false, true)
+  end
+end
+
+M.switch_buf = function(buf)
+  state.buf = buf
+  volt_redraw(state.sidebuf, "bufs")
+  api.nvim_set_current_win(state.win)
+  api.nvim_set_current_buf(buf)
+
+  local details = vim.tbl_filter(function(x)
+    return x.buf == buf
+  end, state.terminals)
+
+  if vim.bo[buf].buftype ~= "terminal" then
+    M.convert_buf2term(details[1].cmd)
+  end
+end
+
+return M
