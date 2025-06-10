@@ -50,6 +50,10 @@ M.switch_buf = function(buf)
     if vim.bo[buf].buftype ~= "terminal" then
       M.convert_buf2term(details[1].cmd)
       volt_redraw(state.barbuf, "bar")
+
+      vim.keymap.set("t", "<C-x>", function()
+        require("floaterm.api").switch_wins()
+      end, { buffer = state.buf })
     end
 
     vim.wo.scl = "yes"

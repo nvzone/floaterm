@@ -29,4 +29,11 @@ M.new_term = function(opts)
   utils.add_keymap(#state.terminals, details.buf)
 end
 
+M.switch_wins = function()
+  local curwin = vim.api.nvim_get_current_win()
+
+  local newwin = curwin == state.win and "sidewin" or "win"
+  vim.api.nvim_set_current_win(state[newwin])
+end
+
 return M
