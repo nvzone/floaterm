@@ -21,9 +21,17 @@ M.new_term = function(name)
   }
 end
 
+M.add_keymap = function(key, buf)
+  vim.keymap.set("n", tostring(key), function()
+    M.switch_buf(buf)
+  end, { buffer = state.sidebuf })
+end
+
 M.gen_term_bufs = function()
   for i, _ in ipairs(state.terminals) do
     state.terminals[i] = vim.tbl_extend("force", M.new_term(), state.terminals[i])
+    local buf = state.terminals[i].buf
+    M.add_keymap(i, buf)
   end
 end
 
@@ -41,6 +49,7 @@ M.switch_buf = function(buf)
 
     if vim.bo[buf].buftype ~= "terminal" then
       M.convert_buf2term(details[1].cmd)
+      volt_redraw(state.barbuf, "bar")
     end
 
     vim.wo.scl = "yes"

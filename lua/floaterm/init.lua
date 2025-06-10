@@ -3,7 +3,6 @@ local api = vim.api
 local utils = require "floaterm.utils"
 local state = require "floaterm.state"
 local volt = require "volt"
-local volt_events = require "volt.events"
 local volt_redraw = require("volt").redraw
 local layout = require "floaterm.layout"
 
@@ -82,7 +81,6 @@ M.open = function()
   volt_redraw(state.barbuf, "bar")
 
   volt.mappings { bufs = { state.buf, state.sidebuf, state.barbuf } }
-  volt_events.add(state.sidebuf)
 
   require "floaterm.mappings"
 end

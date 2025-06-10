@@ -23,8 +23,10 @@ M.new_term = function(opts)
     end)
   end
 
-  table.insert(state.terminals, utils.new_term(name))
-  utils.switch_buf(state.buf)
+  local details = utils.new_term(name)
+  table.insert(state.terminals, details)
+  utils.switch_buf(details.buf)
+  utils.add_keymap(#state.terminals, details.buf)
 end
 
 return M
