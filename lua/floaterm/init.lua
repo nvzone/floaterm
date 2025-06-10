@@ -8,6 +8,7 @@ local volt_redraw = require("volt").redraw
 local layout = require "floaterm.layout"
 
 M.open = function()
+  state.volt_set = true
   state.sidebuf = api.nvim_create_buf(false, true)
   state.barbuf = api.nvim_create_buf(false, true)
 
@@ -15,7 +16,7 @@ M.open = function()
   state.terminals = conf.terminals
 
   utils.gen_term_bufs()
-  state.buf = state.terminals[1].buf
+  state.buf = state.buf or state.terminals[1].buf
 
   ----------- calculate h,w
   state.h = math.floor(vim.o.lines * (conf.size_h / 100))
@@ -32,12 +33,12 @@ M.open = function()
     zindex = 100,
   }
 
-  local sidewin = api.nvim_open_win(state.sidebuf, true, sidebar_win_opts)
+  state.sidewin = api.nvim_open_win(state.sidebuf, true, sidebar_win_opts)
 
   local win_opts = {
     row = 3,
     col = 20 + 1,
-    win = sidewin,
+    win = state.sidewin,
     width = state.w - 20,
     height = state.h - 2,
     relative = "win",
@@ -46,12 +47,12 @@ M.open = function()
     zindex = 100,
   }
 
-  api.nvim_win_set_hl_ns(sidewin, state.ns)
+  api.nvim_win_set_hl_ns(state.sidewin, state.ns)
 
   local bar_win_opts = {
     row = -1,
     col = 20 + 1,
-    win = sidewin,
+    win = state.sidewin,
     width = state.w - 20,
     height = 4,
     relative = "win",
@@ -60,8 +61,8 @@ M.open = function()
     zindex = 100,
   }
 
-  local bar_win = api.nvim_open_win(state.barbuf, false, bar_win_opts)
-  vim.wo[bar_win].winhl = "Normal:exdarkbg,FloatBorder:Exdarkborder"
+  state.barwin = api.nvim_open_win(state.barbuf, false, bar_win_opts)
+  vim.wo[state.barwin].winhl = "Normal:exdarkbg,FloatBorder:Exdarkborder"
 
   api.nvim_set_hl(state.ns, "FloatBorder", { link = "exblack2border" })
   api.nvim_set_hl(state.ns, "Normal", { link = "exblack2bg" })
@@ -77,8 +78,6 @@ M.open = function()
   state.win = api.nvim_open_win(state.buf, true, win_opts)
   vim.wo[state.win].winhl = "Normal:ExDarkbg,FloatBorder:ExDarkBorder"
   utils.switch_buf(state.buf)
-  vim.wo.scl = "yes"
-  vim.cmd.startinsert()
 
   volt_redraw(state.barbuf, "bar")
 
@@ -86,6 +85,17 @@ M.open = function()
   volt_events.add(state.sidebuf)
 
   require "floaterm.mappings"
+end
+
+M.toggle = function()
+  if state.volt_set then
+    api.nvim_win_close(state.win, false)
+    api.nvim_win_close(state.barwin, false)
+    api.nvim_win_close(state.sidewin, false)
+    state.volt_set=false
+  else
+    M.open()
+  end
 end
 
 return M

@@ -31,18 +31,21 @@ M.switch_buf = function(buf)
   state.buf = buf
   volt_redraw(state.sidebuf, "bufs")
   volt_redraw(state.barbuf, "bar")
-  api.nvim_set_current_win(state.win)
-  api.nvim_set_current_buf(buf)
+  vim.schedule(function()
+    api.nvim_set_current_win(state.win)
+    api.nvim_set_current_buf(buf)
 
-  local details = vim.tbl_filter(function(x)
-    return x.buf == buf
-  end, state.terminals)
+    local details = vim.tbl_filter(function(x)
+      return x.buf == buf
+    end, state.terminals)
 
-  if vim.bo[buf].buftype ~= "terminal" then
-    M.convert_buf2term(details[1].cmd)
-  end
+    if vim.bo[buf].buftype ~= "terminal" then
+      M.convert_buf2term(details[1].cmd)
+    end
 
-  vim.wo.scl = "yes"
+    vim.wo.scl = "yes"
+    vim.cmd.startinsert()
+  end)
 end
 
 M.get_term_by_buf = function(buf)
