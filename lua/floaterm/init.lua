@@ -38,7 +38,7 @@ M.open = function()
     row = 3,
     col = 20 + 1,
     win = sidewin,
-    width = state.w - 18,
+    width = state.w - 20,
     height = state.h - 2,
     relative = "win",
     style = "minimal",
@@ -52,7 +52,7 @@ M.open = function()
     row = -1,
     col = 20 + 1,
     win = sidewin,
-    width = state.w - 18,
+    width = state.w - 20,
     height = 4,
     relative = "win",
     style = "minimal",
@@ -72,7 +72,6 @@ M.open = function()
   }
 
   volt.run(state.sidebuf, { h = sidebar_win_opts.height, w = sidebar_win_opts.width })
-  vim.print{bar_win_opts.width, state.w-18, win_opts.width}
   volt.run(state.barbuf, { h = 3, w = bar_win_opts.width })
 
   state.win = api.nvim_open_win(state.buf, true, win_opts)
@@ -81,11 +80,12 @@ M.open = function()
   vim.wo.scl = "yes"
   vim.cmd.startinsert()
 
-  volt_redraw(state.barbuf, 'bar')
-
+  volt_redraw(state.barbuf, "bar")
 
   volt.mappings { bufs = { state.buf, state.sidebuf, state.barbuf } }
   volt_events.add(state.sidebuf)
+
+  require "floaterm.mappings"
 end
 
 return M

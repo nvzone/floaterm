@@ -17,21 +17,22 @@ M.items = function()
 
   for i, v in ipairs(state.terminals) do
     local icon = "" .. "  "
-    local label = icon .. (v.name or "New terminal") .. "    " .. num_icons[i]
+    local label = icon .. (v.name or "Terminal")
     local hl = state.buf == v.buf and "ExGreen" or "Comment"
     local actions = {
       click = function()
         utils.switch_buf(v.buf)
       end,
     }
-    table.insert(terms, { { label, hl, actions } })
+    local line = { { label, hl, actions }, { "_pad_" }, { num_icons[i],hl } }
+    table.insert(terms, voltui.hpad(line, 26) )
   end
 
   return terms
 end
 
 M.bar = function()
-  local w = state.w - 10
+  local w = state.w - 12
 
   local active_term = utils.get_term_by_buf(state.buf)
   local active_label = "    " .. active_term.name

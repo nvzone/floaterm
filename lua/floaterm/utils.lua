@@ -13,10 +13,17 @@ M.convert_buf2term = function(cmd)
   vim.fn.jobstart(cmd, { detach = false, term = true })
 end
 
+M.new_term = function(name)
+  return {
+    buf = api.nvim_create_buf(false, true),
+    time = os.date "%H:%M",
+    name = name or "Terminal",
+  }
+end
+
 M.gen_term_bufs = function()
   for i, _ in ipairs(state.terminals) do
-    state.terminals[i].buf = api.nvim_create_buf(false, true)
-    state.terminals[i].time = os.date("%H:%M")
+    state.terminals[i] = vim.tbl_extend("force", M.new_term(), state.terminals[i])
   end
 end
 
