@@ -7,7 +7,7 @@ local M = {
     size_w = 70,
 
     terminals = {
-      { name = "terminal" },
+      { name = "SSH term" },
       { name = "terminal" },
       { name = "terminal", cmd = "neofetch" },
     },

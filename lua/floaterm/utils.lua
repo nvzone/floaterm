@@ -16,12 +16,14 @@ end
 M.gen_term_bufs = function()
   for i, _ in ipairs(state.terminals) do
     state.terminals[i].buf = api.nvim_create_buf(false, true)
+    state.terminals[i].time = os.date("%H:%M:%S")
   end
 end
 
 M.switch_buf = function(buf)
   state.buf = buf
   volt_redraw(state.sidebuf, "bufs")
+  volt_redraw(state.barbuf, "bar")
   api.nvim_set_current_win(state.win)
   api.nvim_set_current_buf(buf)
 
@@ -31,6 +33,14 @@ M.switch_buf = function(buf)
 
   if vim.bo[buf].buftype ~= "terminal" then
     M.convert_buf2term(details[1].cmd)
+  end
+end
+
+M.get_term_by_buf = function(buf)
+  for _, v in ipairs(state.terminals) do
+    if buf == v.buf then
+      return v
+    end
   end
 end
 
