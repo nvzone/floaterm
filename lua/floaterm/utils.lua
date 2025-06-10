@@ -41,6 +41,8 @@ M.switch_buf = function(buf)
   if vim.bo[buf].buftype ~= "terminal" then
     M.convert_buf2term(details[1].cmd)
   end
+
+  vim.wo.scl = "yes"
 end
 
 M.get_term_by_buf = function(buf)
