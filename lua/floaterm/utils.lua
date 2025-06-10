@@ -16,7 +16,7 @@ end
 M.gen_term_bufs = function()
   for i, _ in ipairs(state.terminals) do
     state.terminals[i].buf = api.nvim_create_buf(false, true)
-    state.terminals[i].time = os.date("%H:%M:%S")
+    state.terminals[i].time = os.date("%H:%M")
   end
 end
 

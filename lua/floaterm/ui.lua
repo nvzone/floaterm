@@ -1,6 +1,7 @@
 local M = {}
 local state = require "floaterm.state"
 local utils = require "floaterm.utils"
+local voltui = require "volt.ui"
 
 local num_icons = {
   -- '󰎡',
@@ -30,29 +31,24 @@ M.items = function()
 end
 
 M.bar = function()
-  local w = state.w - 18
+  local w = state.w - 10
 
   local active_term = utils.get_term_by_buf(state.buf)
+  local active_label = "    " .. active_term.name
 
-  local active_index = vim.fn.index( state.terminals, active_term)
+  local bufname = vim.api.nvim_buf_get_name(state.buf)
 
-  local active_numicon =   "  " .. num_icons[active_index+1] .. "  "
-  local active_label = "    " .. active_term.name ..  active_numicon
-
-
-  local active_w = vim.api.nvim_strwidth(active_label)
-
-  local empty_line = {
-    { string.rep(" ", active_w), "exdarkbg" },
-    { string.rep(" ", w - active_w), "exblack2bg" },
+  local line = {
+    { active_label, "exdarkbg" },
+    { "  " .. bufname .. " ", "Comment" },
+    { "_pad_" },
+    { "  " .. active_term.time, "exred" },
   }
-
   return {
-    empty_line,
-    {
-      { active_label, "exdarkbg" },
-    },
-    empty_line,
+    {},
+    voltui.hpad(line, w),
+    voltui.separator("_", w),
+    {},
   }
 end
 

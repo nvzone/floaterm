@@ -4,6 +4,7 @@ local utils = require "floaterm.utils"
 local state = require "floaterm.state"
 local volt = require "volt"
 local volt_events = require "volt.events"
+local volt_redraw = require("volt").redraw
 local layout = require "floaterm.layout"
 
 M.open = function()
@@ -34,14 +35,14 @@ M.open = function()
   local sidewin = api.nvim_open_win(state.sidebuf, true, sidebar_win_opts)
 
   local win_opts = {
-    row = 2,
+    row = 3,
     col = 20 + 1,
     win = sidewin,
-    width = state.w - 20,
-    height = state.h - 3,
+    width = state.w - 18,
+    height = state.h - 2,
     relative = "win",
     style = "minimal",
-    border = "single",
+    border = "none",
     zindex = 100,
   }
 
@@ -52,7 +53,7 @@ M.open = function()
     col = 20 + 1,
     win = sidewin,
     width = state.w - 18,
-    height = 3,
+    height = 4,
     relative = "win",
     style = "minimal",
     border = "none",
@@ -60,7 +61,7 @@ M.open = function()
   }
 
   local bar_win = api.nvim_open_win(state.barbuf, false, bar_win_opts)
-  vim.wo[bar_win].winhl = "Normal:exblack2bg,FloatBorder:Exblack2border"
+  vim.wo[bar_win].winhl = "Normal:exdarkbg,FloatBorder:Exdarkborder"
 
   api.nvim_set_hl(state.ns, "FloatBorder", { link = "exblack2border" })
   api.nvim_set_hl(state.ns, "Normal", { link = "exblack2bg" })
@@ -71,12 +72,17 @@ M.open = function()
   }
 
   volt.run(state.sidebuf, { h = sidebar_win_opts.height, w = sidebar_win_opts.width })
+  vim.print{bar_win_opts.width, state.w-18, win_opts.width}
   volt.run(state.barbuf, { h = 3, w = bar_win_opts.width })
 
   state.win = api.nvim_open_win(state.buf, true, win_opts)
   vim.wo[state.win].winhl = "Normal:ExDarkbg,FloatBorder:ExDarkBorder"
   utils.switch_buf(state.buf)
+  vim.wo.scl = "yes"
   vim.cmd.startinsert()
+
+  volt_redraw(state.barbuf, 'bar')
+
 
   volt.mappings { bufs = { state.buf, state.sidebuf, state.barbuf } }
   volt_events.add(state.sidebuf)
