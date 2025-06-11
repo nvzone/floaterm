@@ -1,5 +1,6 @@
 local M = {}
 local api = vim.api
+local map = vim.keymap.set
 local state = require "floaterm.state"
 local volt_redraw = require("volt").redraw
 local shell = vim.o.shell
@@ -23,7 +24,7 @@ M.new_term = function(name)
 end
 
 M.add_keymap = function(key, buf)
-  vim.keymap.set("n", tostring(key), function()
+  map("n", tostring(key), function()
     M.switch_buf(buf)
   end, { buffer = state.sidebuf })
 end
@@ -38,6 +39,7 @@ end
 
 M.switch_buf = function(buf)
   state.buf = buf
+
   volt_redraw(state.sidebuf, "bufs")
   volt_redraw(state.barbuf, "bar")
   vim.schedule(function()
@@ -52,7 +54,7 @@ M.switch_buf = function(buf)
       M.convert_buf2term(details[1].cmd)
       volt_redraw(state.barbuf, "bar")
 
-      vim.keymap.set("t", "<C-x>", function()
+      map({ "t", "n" }, "<C-h>", function()
         require("floaterm.api").switch_wins()
       end, { buffer = state.buf })
     end
