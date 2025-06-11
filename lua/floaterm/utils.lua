@@ -56,7 +56,6 @@ M.switch_buf = function(buf)
       end, { buffer = state.buf })
     end
 
-    vim.wo.scl = "yes"
     vim.cmd.startinsert()
   end)
 end

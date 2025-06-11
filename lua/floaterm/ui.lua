@@ -32,24 +32,21 @@ M.items = function()
 end
 
 M.bar = function()
-  local w = state.w - 12
+  local w = state.w - 14
 
   local active_term = utils.get_term_by_buf(state.buf)
-  local active_label = "    " .. active_term.name
+  local active_label = "   " .. active_term.name
 
   local bufname = vim.api.nvim_buf_get_name(state.buf)
 
   local line = {
-    { active_label, "exdarkbg" },
+    { active_label, "xdarkbg" },
     { "  " .. bufname .. " ", "Comment" },
     { "_pad_" },
     { "  " .. active_term.time, "exred" },
   }
   return {
-    {},
     voltui.hpad(line, w),
-    voltui.separator("_", w),
-    {},
   }
 end
 
