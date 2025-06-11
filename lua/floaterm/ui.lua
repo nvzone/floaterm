@@ -10,10 +10,10 @@ local num_icons = {
   "󰎪",
   "󰎭",
   "󰎱",
-  '󰎳',
-  '󰎶',
-  '󰎹',
-  '󰎼'
+  "󰎳",
+  "󰎶",
+  "󰎹",
+  "󰎼",
 }
 
 M.items = function()
@@ -48,11 +48,26 @@ M.bar = function()
     { "_pad_" },
     { string.format("   %.1f MB ", bytes / (1024 * 1024)), "exgreen" },
     { "   " .. active_term.time, "exred" },
-    { "  " .. math.floor(active_term.secs/60) .. " MIN" , "" },
+    { "  " .. math.floor(active_term.secs / 60) .. " MIN", "" },
   }
   return {
     voltui.hpad(line, w),
   }
+end
+
+M.help = function()
+  local lines = {
+    voltui.separator("-", 18),
+    { { "a - add", "comment" }, { "  e - edit", "comment" } },
+  }
+
+  local empty_lines_to_fill = state.h - #state.terminals - #lines
+
+  for _ = 1, empty_lines_to_fill, 1 do
+    table.insert(lines, 1, {})
+  end
+
+  return lines
 end
 
 return M

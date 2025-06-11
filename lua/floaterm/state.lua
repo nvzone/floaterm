@@ -10,9 +10,9 @@ local M = {
     size_w = 70,
 
     terminals = {
-      { name = "SSH term" },
-      { name = "terminal" },
-      { name = "terminal", cmd = "neofetch" },
+      { name = "Terminal" },
+      { name = "Terminal" },
+      { name = "Terminal", cmd = "neofetch" },
     },
   },
 }
