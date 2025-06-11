@@ -105,13 +105,6 @@ M.open = function()
 
   volt_redraw(state.barbuf, "bar")
 
-  volt.mappings {
-    bufs = { state.buf, state.sidebuf, state.barbuf },
-    after_close = function()
-      utils.close_timers()
-    end,
-  }
-
   require "floaterm.mappings"
   require "floaterm.hl"()
 

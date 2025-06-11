@@ -57,6 +57,13 @@ M.switch_buf = function(buf)
       map({ "t", "n" }, "<C-h>", function()
         require("floaterm.api").switch_wins()
       end, { buffer = state.buf })
+
+      require('volt').mappings {
+        bufs = { state.buf, state.sidebuf, state.barbuf },
+        after_close = function()
+          M.close_timers()
+        end,
+      }
     end
 
     M.add_term_buf_timer(buf)
