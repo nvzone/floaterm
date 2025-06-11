@@ -7,8 +7,6 @@ local volt_redraw = require("volt").redraw
 local layout = require "floaterm.layout"
 
 M.open = function()
-  require "floaterm.hl"()
-
   state.volt_set = true
   state.sidebuf = api.nvim_create_buf(false, true)
   state.barbuf = api.nvim_create_buf(false, true)
@@ -110,6 +108,7 @@ M.open = function()
   volt.mappings { bufs = { state.buf, state.sidebuf, state.barbuf } }
 
   require "floaterm.mappings"
+  require "floaterm.hl"()
 end
 
 M.toggle = function()
