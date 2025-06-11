@@ -105,10 +105,25 @@ M.open = function()
 
   volt_redraw(state.barbuf, "bar")
 
-  volt.mappings { bufs = { state.buf, state.sidebuf, state.barbuf } }
+  volt.mappings {
+    bufs = { state.buf, state.sidebuf, state.barbuf },
+    after_close = function()
+      utils.close_timers()
+    end,
+  }
 
   require "floaterm.mappings"
   require "floaterm.hl"()
+
+  state.bar_redraw_timer = vim.uv.new_timer()
+
+  state.bar_redraw_timer:start(
+    0,
+    state.bar_redraw_timeout,
+    vim.schedule_wrap(function()
+      volt_redraw(state.barbuf, "bar")
+    end)
+  )
 end
 
 M.toggle = function()
@@ -116,6 +131,7 @@ M.toggle = function()
     api.nvim_win_close(state.win, false)
     api.nvim_win_close(state.barwin, false)
     api.nvim_win_close(state.sidewin, false)
+    utils.close_timers()
     state.volt_set = false
   else
     M.open()

@@ -18,6 +18,7 @@ M.new_term = function(name)
     buf = api.nvim_create_buf(false, true),
     time = os.date "%H:%M",
     name = name or "Terminal",
+    secs = 0,
   }
 end
 
@@ -56,6 +57,8 @@ M.switch_buf = function(buf)
       end, { buffer = state.buf })
     end
 
+    M.add_term_buf_timer(buf)
+
     vim.cmd.startinsert()
   end)
 end
@@ -66,6 +69,34 @@ M.get_term_by_buf = function(buf)
       return v
     end
   end
+end
+
+M.add_term_buf_timer = function(buf)
+  if state.termbuf_session_timer then
+    state.termbuf_session_timer:stop()
+    state.termbuf_session_timer:close()
+  end
+
+  state.termbuf_session_timer = vim.uv.new_timer()
+
+  local i = vim.fn.index(state.terminals, M.get_term_by_buf(buf)) + 1
+
+  state.termbuf_session_timer:start(
+    0,
+    1000,
+    vim.schedule_wrap(function()
+      state.terminals[i].secs = state.terminals[i].secs + 1
+    end)
+  )
+end
+
+M.close_timers = function()
+  state.termbuf_session_timer:stop()
+  state.termbuf_session_timer:close()
+  state.termbuf_session_timer = nil
+  state.bar_redraw_timer:stop()
+  state.bar_redraw_timer:close()
+  state.bar_redraw_timer = nil
 end
 
 return M
