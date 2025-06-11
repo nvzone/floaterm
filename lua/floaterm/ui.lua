@@ -10,6 +10,10 @@ local num_icons = {
   "󰎪",
   "󰎭",
   "󰎱",
+  '󰎳',
+  '󰎶',
+  '󰎹',
+  '󰎼'
 }
 
 M.items = function()
@@ -24,7 +28,7 @@ M.items = function()
         utils.switch_buf(v.buf)
       end,
     }
-    local line = { { label, hl, actions }, { "_pad_" }, { num_icons[i], hl } }
+    local line = { { label, hl, actions }, { "_pad_" }, { num_icons[i] or tostring(i), hl } }
     table.insert(terms, voltui.hpad(line, 26))
   end
 
