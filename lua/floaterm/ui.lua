@@ -24,8 +24,8 @@ M.items = function()
         utils.switch_buf(v.buf)
       end,
     }
-    local line = { { label, hl, actions }, { "_pad_" }, { num_icons[i],hl } }
-    table.insert(terms, voltui.hpad(line, 26) )
+    local line = { { label, hl, actions }, { "_pad_" }, { num_icons[i], hl } }
+    table.insert(terms, voltui.hpad(line, 26))
   end
 
   return terms
@@ -37,13 +37,13 @@ M.bar = function()
   local active_term = utils.get_term_by_buf(state.buf)
   local active_label = "   " .. active_term.name
 
-  local bufname = vim.api.nvim_buf_get_name(state.buf)
+  local bytes = vim.api.nvim_buf_get_offset(state.buf, vim.api.nvim_buf_line_count(state.buf)) - 1
 
   local line = {
     { active_label, "xdarkbg" },
-    { "  " .. bufname .. " ", "Comment" },
     { "_pad_" },
-    { "  " .. active_term.time, "exred" },
+    { string.format("   %.2f MB ", bytes / (1024 * 1024)), "exgreen" },
+    { "   " .. active_term.time, "exred" },
   }
   return {
     voltui.hpad(line, w),
