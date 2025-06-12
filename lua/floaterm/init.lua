@@ -6,6 +6,10 @@ local volt = require "volt"
 local volt_redraw = require("volt").redraw
 local layout = require "floaterm.layout"
 
+M.setup = function(opts)
+  state.config = vim.tbl_deep_extend("force", state.config, opts or {})
+end
+
 M.open = function()
   state.volt_set = true
   state.sidebuf = api.nvim_create_buf(false, true)
@@ -19,8 +23,8 @@ M.open = function()
   state.buf = state.buf or state.terminals[1].buf
 
   ----------- calculate h,w
-  state.h = math.floor(vim.o.lines * (conf.size_h / 100))
-  state.w = math.floor(vim.o.columns * (conf.size_w / 100))
+  state.h = math.floor(vim.o.lines * (conf.size.h / 100))
+  state.w = math.floor(vim.o.columns * (conf.size.w / 100))
 
   local sidebar_w = 20
 

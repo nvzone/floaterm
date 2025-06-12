@@ -6,8 +6,7 @@ local M = {
 
   config = {
     border = false,
-    size_h = 60,
-    size_w = 70,
+    size = { h = 60, w = 70 },
 
     terminals = {
       { name = "Terminal" },
