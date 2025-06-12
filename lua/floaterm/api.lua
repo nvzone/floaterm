@@ -6,6 +6,11 @@ local M = {}
 M.edit_name = function()
   local row = vim.api.nvim_win_get_cursor(0)[1]
 
+  if not state.terminals[row] then
+    vim.notify("please place cursor on a valid terminal name!", vim.log.levels.WARN)
+    return
+  end
+
   vim.ui.input({ prompt = "   Enter name: " }, function(input)
     state.terminals[row].name = input
     vim.api.nvim_echo({}, false, {})
