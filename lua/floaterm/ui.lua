@@ -29,17 +29,17 @@ M.items = function()
       end,
     }
     local line = { { label, hl, actions }, { "_pad_" }, { num_icons[i] or tostring(i), hl } }
-    table.insert(terms, voltui.hpad(line, 26))
+    table.insert(terms, voltui.hpad(line, 18))
   end
 
   return terms
 end
 
 M.bar = function()
-  local w = state.w - 14
+  local w = state.w - 20 - 2
 
   local active_term = utils.get_term_by_buf(state.buf)[2]
-  local active_label = "   " .. active_term.name
+  local active_label = "  " .. active_term.name
 
   local bytes = vim.api.nvim_buf_get_offset(state.buf, vim.api.nvim_buf_line_count(state.buf)) - 1
 

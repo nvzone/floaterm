@@ -22,10 +22,12 @@ M.open = function()
   state.h = math.floor(vim.o.lines * (conf.size_h / 100))
   state.w = math.floor(vim.o.columns * (conf.size_w / 100))
 
+  local sidebar_w = 20
+
   local sidebar_win_opts = {
     row = (vim.o.lines / 2 - state.h / 2) - 1,
     col = (vim.o.columns / 2 - state.w / 2),
-    width = 20,
+    width = sidebar_w,
     height = state.h,
     relative = "editor",
     style = "minimal",
@@ -46,11 +48,9 @@ M.open = function()
     { " ", "exdarkborder" },
   }
 
-  local sidebar_w = 22
-
   local win_opts = {
     row = 2,
-    col = sidebar_w + (bordered and 0 or -1),
+    col = sidebar_w + (bordered and 2 or 1),
     win = state.sidewin,
     width = state.w - sidebar_w,
     height = state.h - 3,
@@ -64,7 +64,7 @@ M.open = function()
 
   local bar_win_opts = {
     row = -1,
-    col = sidebar_w + (bordered and 0 or -1),
+    col = sidebar_w + (bordered and 2 or 1),
     win = state.sidewin,
     width = state.w - sidebar_w,
     height = 1,
@@ -87,7 +87,7 @@ M.open = function()
 
   volt.gen_data {
     { buf = state.sidebuf, ns = state.ns, layout = layout.sidebar, xpad = 1 },
-    { buf = state.barbuf, ns = state.ns, layout = layout.bar, xpad = 0 },
+    { buf = state.barbuf, ns = state.ns, layout = layout.bar, xpad = 1 },
   }
 
   volt.run(state.sidebuf, { h = sidebar_win_opts.height, w = sidebar_win_opts.width })
