@@ -7,6 +7,7 @@ local shell = vim.o.shell
 
 M.convert_buf2term = function(cmd)
   if cmd then
+    cmd = type(cmd) == "function" and cmd() or cmd
     cmd = { shell, "-c", cmd .. "; " .. shell }
   else
     cmd = { shell }
@@ -58,7 +59,7 @@ M.switch_buf = function(buf)
         require("floaterm.api").switch_wins()
       end, { buffer = state.buf })
 
-      require('volt').mappings {
+      require("volt").mappings {
         bufs = { state.buf, state.sidebuf, state.barbuf },
         after_close = function()
           M.close_timers()
@@ -73,9 +74,9 @@ M.switch_buf = function(buf)
 end
 
 M.get_term_by_buf = function(buf)
-  for _, v in ipairs(state.terminals) do
+  for i, v in ipairs(state.terminals) do
     if buf == v.buf then
-      return v
+      return { i, v }
     end
   end
 end
@@ -88,7 +89,7 @@ M.add_term_buf_timer = function(buf)
 
   state.termbuf_session_timer = vim.uv.new_timer()
 
-  local i = vim.fn.index(state.terminals, M.get_term_by_buf(buf)) + 1
+  local i = M.get_term_by_buf(buf)[1]
 
   state.termbuf_session_timer:start(
     0,
