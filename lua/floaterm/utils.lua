@@ -63,6 +63,8 @@ M.switch_buf = function(buf)
         bufs = { state.buf, state.sidebuf, state.barbuf },
         after_close = function()
           M.close_timers()
+          state.volt_set = false
+          state.buf = nil
         end,
       }
     end
