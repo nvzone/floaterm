@@ -59,12 +59,12 @@ M.switch_buf = function(buf)
         require("floaterm.api").switch_wins()
       end, { buffer = state.buf })
 
-      map({ "t", "n" }, "<C-j>", function()
-        M.next_terminal()
+      map({ "n", "t" }, "<C-j>", function()
+        require("floaterm.api").cycle_term_bufs "next"
       end, { buffer = state.buf })
 
-      map({ "t", "n" }, "<C-k>", function()
-        M.prev_terminal()
+      map({ "n", "t" }, "<C-k>", function()
+        require("floaterm.api").cycle_term_bufs "prev"
       end, { buffer = state.buf })
 
       require("volt").mappings {
@@ -122,7 +122,7 @@ end
 
 M.next_terminal = function()
   if not state.terminals or #state.terminals == 0 then
-  	return
+    return
   end
 
   local current_index = M.get_term_by_buf(state.buf)
@@ -138,7 +138,7 @@ end
 
 M.prev_terminal = function()
   if not state.terminals or #state.terminals == 0 then
-  	return
+    return
   end
 
   local current_index = M.get_term_by_buf(state.buf)
