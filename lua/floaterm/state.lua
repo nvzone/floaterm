@@ -1,6 +1,6 @@
 local M = {
   ns = vim.api.nvim_create_namespace "Floaterm",
-  terminals = {},
+  terminals = nil,
   termbuf_session_timer = nil,
   bar_redraw_timeout = 10000,
 
