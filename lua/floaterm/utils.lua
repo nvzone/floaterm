@@ -59,6 +59,14 @@ M.switch_buf = function(buf)
         require("floaterm.api").switch_wins()
       end, { buffer = state.buf })
 
+      map({ "t", "n" }, "<C-j>", function()
+        M.next_terminal()
+      end, { buffer = state.buf })
+
+      map({ "t", "n" }, "<C-k>", function()
+        M.prev_terminal()
+      end, { buffer = state.buf })
+
       require("volt").mappings {
         bufs = { state.buf, state.sidebuf, state.barbuf },
         after_close = function()
@@ -110,6 +118,38 @@ M.close_timers = function()
   state.bar_redraw_timer:stop()
   state.bar_redraw_timer:close()
   state.bar_redraw_timer = nil
+end
+
+M.next_terminal = function()
+  if not state.terminals or #state.terminals == 0 then
+  	return
+  end
+
+  local current_index = M.get_term_by_buf(state.buf)
+  if not current_index then
+    -- If not in a terminal, switch to the first one
+    M.switch_buf(state.terminals[1].buf)
+    return
+  end
+
+  local next_index = current_index[1] % #state.terminals + 1
+  M.switch_buf(state.terminals[next_index].buf)
+end
+
+M.prev_terminal = function()
+  if not state.terminals or #state.terminals == 0 then
+  	return
+  end
+
+  local current_index = M.get_term_by_buf(state.buf)
+  if not current_index then
+    -- If not in a terminal, switch to the first one
+    M.switch_buf(state.terminals[1].buf)
+    return
+  end
+
+  local prev_index = (current_index[1] - 2) % #state.terminals + 1
+  M.switch_buf(state.terminals[prev_index].buf)
 end
 
 return M
