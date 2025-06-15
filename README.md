@@ -13,7 +13,7 @@ A beautiful toggleable floating window for managing terminal buffers within Neov
     dependencies = "nvzone/volt",
     opts = {},
     cmd = "FloatermToggle",
-}
+}          
 ```
 
 ## Default config
@@ -41,5 +41,8 @@ This are the mappings for sidebar
 - <kbd>e</kbd> -> edit terminal name
 - Pressing any number within sidebar will switch to that terminal
 
+
 Must be pressed in main terminal buffer
 - <kbd>Ctrl + h</kbd> -> Switch to sidebar
+- <kbd>Ctrl + j</kbd> -> Cycle to prev terminal
+- <kbd>Ctrl + k</kbd> -> Cycle to next terminal
