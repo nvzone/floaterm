@@ -41,4 +41,21 @@ M.switch_wins = function()
   vim.api.nvim_set_current_win(state[newwin])
 end
 
+M.cycle_term_bufs = function(direction)
+  if not state.terminals or #state.terminals == 0 then
+    return
+  end
+
+  local cur_index = utils.get_term_by_buf(state.buf)
+
+  if not cur_index then
+    -- If not in a terminal, switch to the first one
+    utils.switch_buf(state.terminals[1].buf)
+    return
+  end
+
+  local new_index = (cur_index[1] + (direction == "prev" and -2 or 0)) % #state.terminals
+  utils.switch_buf(state.terminals[new_index + 1].buf)
+end
+
 return M
