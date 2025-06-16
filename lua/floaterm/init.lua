@@ -18,7 +18,8 @@ M.open = function()
 
   local conf = state.config
   local bordered = conf.border
-  state.terminals = state.terminals or vim.tbl_deep_extend("force", {}, conf.terminals)
+  local usr_terms = type(conf.terminals) == "table" and conf.terminals or conf.terminals()
+  state.terminals = state.terminals or vim.tbl_deep_extend("force", {}, usr_terms)
 
   utils.gen_term_bufs()
   state.buf = state.buf or state.terminals[1].buf
