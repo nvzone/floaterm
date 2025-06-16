@@ -74,6 +74,8 @@ M.switch_buf = function(buf)
           state.volt_set = false
           state.terminals = nil
           state.buf = nil
+          state.sidebuf = nil
+          state.barbuf = nil
         end,
       }
 

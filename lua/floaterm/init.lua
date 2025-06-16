@@ -12,8 +12,8 @@ end
 
 M.open = function()
   state.volt_set = true
-  state.sidebuf = api.nvim_create_buf(false, true)
-  state.barbuf = api.nvim_create_buf(false, true)
+  state.sidebuf = state.sidebuf or api.nvim_create_buf(false, true)
+  state.barbuf = state.barbuf or api.nvim_create_buf(false, true)
   state.prev_win_focussed = api.nvim_get_current_win()
 
   local conf = state.config
@@ -94,6 +94,9 @@ M.open = function()
     { buf = state.sidebuf, ns = state.ns, layout = layout.sidebar, xpad = 1 },
     { buf = state.barbuf, ns = state.ns, layout = layout.bar, xpad = 1 },
   }
+
+  api.nvim_set_option_value("modifiable", true, { buf = state.sidebuf })
+  api.nvim_set_option_value("modifiable", true, { buf = state.barbuf })
 
   volt.run(state.sidebuf, { h = sidebar_win_opts.height, w = sidebar_win_opts.width })
   volt.run(state.barbuf, { h = 1, w = bar_win_opts.width })
