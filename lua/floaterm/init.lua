@@ -121,6 +121,8 @@ M.open = function()
       volt_redraw(state.barbuf, "bar")
     end)
   )
+
+  vim.bo[state.sidebuf].ft ="FloatermSidebar"
 end
 
 M.toggle = function()
