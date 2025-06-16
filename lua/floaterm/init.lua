@@ -14,7 +14,7 @@ M.open = function()
   state.volt_set = true
   state.sidebuf = api.nvim_create_buf(false, true)
   state.barbuf = api.nvim_create_buf(false, true)
-  state.prev_win_focussed = vim.fn.win_getid()
+  state.prev_win_focussed = api.nvim_get_current_win()
 
   local conf = state.config
   local bordered = conf.border
