@@ -7,11 +7,10 @@ local M = {
   config = {
     border = false,
     size = { h = 60, w = 70 },
-
+    -- must be functions
+    mappings = { sidebar = nil, term = nil },
     terminals = {
       { name = "Terminal" },
-      { name = "Terminal" },
-      { name = "Terminal", cmd = "neofetch" },
     },
   },
 }

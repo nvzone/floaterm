@@ -23,6 +23,9 @@ A beautiful toggleable floating window for managing terminal buffers within Neov
     border = false,
     size = { h = 60, w = 70 },
 
+    -- to use, make this func(buf)
+    mappings = { sidebar = nil, term = nil},
+
     -- Default sets of terminals you'd like to open
     terminals = {
       { name = "Terminal" },
@@ -45,3 +48,17 @@ Must be pressed in main terminal buffer
 - <kbd>Ctrl + h</kbd> -> Switch to sidebar
 - <kbd>Ctrl + j</kbd> -> Cycle to prev terminal
 - <kbd>Ctrl + k</kbd> -> Cycle to next terminal
+
+Add new mapping
+
+```lua 
+  {
+     mappings = {
+       term = function(buf)
+         vim.keymap.set({ "n", "t" }, "<C-p>", function()
+           require("floaterm.api").cycle_term_bufs "prev"
+         end, { buffer = buf })
+       end,
+     },
+  },
+```

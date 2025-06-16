@@ -76,6 +76,8 @@ M.switch_buf = function(buf)
           state.buf = nil
         end,
       }
+
+      state.config.mappings.term(state.buf)
     end
 
     M.add_term_buf_timer(buf)
