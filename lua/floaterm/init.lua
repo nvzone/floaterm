@@ -14,6 +14,7 @@ M.open = function()
   state.volt_set = true
   state.sidebuf = api.nvim_create_buf(false, true)
   state.barbuf = api.nvim_create_buf(false, true)
+  state.prev_win_focussed = api.nvim_get_current_win()
 
   local conf = state.config
   local bordered = conf.border
@@ -122,7 +123,7 @@ M.open = function()
     end)
   )
 
-  vim.bo[state.sidebuf].ft ="FloatermSidebar"
+  vim.bo[state.sidebuf].ft = "FloatermSidebar"
 end
 
 M.toggle = function()
@@ -132,6 +133,7 @@ M.toggle = function()
     api.nvim_win_close(state.sidewin, false)
     utils.close_timers()
     state.volt_set = false
+    api.nvim_set_current_win(state.prev_win_focussed)
   else
     M.open()
   end
