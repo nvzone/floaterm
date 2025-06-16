@@ -3,6 +3,7 @@ local M = {
   terminals = nil,
   termbuf_session_timer = nil,
   bar_redraw_timeout = 10000,
+  prev_win_focussed = 0,
 
   config = {
     border = false,
