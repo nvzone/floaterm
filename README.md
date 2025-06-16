@@ -21,8 +21,7 @@ A beautiful toggleable floating window for managing terminal buffers within Neov
 ```lua
  {
     border = false,
-    size_h = 60,
-    size_w = 70,
+    size = { h = 60, w = 70 },
 
     -- Default sets of terminals you'd like to open
     terminals = {
