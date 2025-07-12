@@ -86,7 +86,9 @@ M.switch_buf = function(buf)
 
     M.add_term_buf_timer(buf)
 
-    vim.cmd.startinsert()
+    if state.config.autoinsert then
+      vim.cmd.startinsert()
+    end
   end)
 end
 
