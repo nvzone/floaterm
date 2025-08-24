@@ -12,7 +12,7 @@ M.convert_buf2term = function(cmd)
   else
     cmd = { shell, "-i" }
   end
-  vim.fn.jobstart({ vim.o.shell, "-i" }, {  term = true })
+  vim.fn.jobstart(cmd, { term = true })
 end
 
 M.new_term = function(name)
