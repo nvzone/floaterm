@@ -10,9 +10,9 @@ M.convert_buf2term = function(cmd)
     cmd = type(cmd) == "function" and cmd() or cmd
     cmd = { shell, "-c", cmd .. "; " .. shell }
   else
-    cmd = { shell }
+    cmd = { shell, "-i" }
   end
-  vim.fn.jobstart(cmd, { detach = false, term = true })
+  vim.fn.jobstart({ vim.o.shell, "-i" }, {  term = true })
 end
 
 M.new_term = function(name)
@@ -20,7 +20,6 @@ M.new_term = function(name)
     buf = api.nvim_create_buf(false, true),
     time = os.date "%H:%M",
     name = name or "Terminal",
-    secs = 0,
   }
 end
 
@@ -43,53 +42,53 @@ M.switch_buf = function(buf)
 
   volt_redraw(state.sidebuf, "bufs")
   volt_redraw(state.barbuf, "bar")
-  vim.schedule(function()
-    api.nvim_set_current_win(state.win)
-    api.nvim_set_current_buf(buf)
 
-    local details = vim.tbl_filter(function(x)
-      return x.buf == buf
-    end, state.terminals)
+  if not api.nvim_win_is_valid(state.win) then
+    -- state.win = api.nvim_open_win(state.buf, true, state.term_win_opts)
+  end
 
-    if vim.bo[buf].buftype ~= "terminal" then
-      M.convert_buf2term(details[1].cmd)
-      volt_redraw(state.barbuf, "bar")
+  api.nvim_set_current_win(state.win)
+  api.nvim_set_current_buf(buf)
 
-      map({ "t", "n" }, "<C-h>", function()
-        require("floaterm.api").switch_wins()
-      end, { buffer = state.buf })
+  local details = vim.tbl_filter(function(x)
+    return x.buf == buf
+  end, state.terminals)
 
-      map({ "n", "t" }, "<C-j>", function()
-        require("floaterm.api").cycle_term_bufs "next"
-      end, { buffer = state.buf })
+  if vim.bo[buf].buftype ~= "terminal" then
+    vim.bo[buf].ft = "Floaterm"
+    M.convert_buf2term(details[1].cmd)
+    volt_redraw(state.barbuf, "bar")
 
-      map({ "n", "t" }, "<C-k>", function()
-        require("floaterm.api").cycle_term_bufs "prev"
-      end, { buffer = state.buf })
+    map({ "t", "n" }, "<C-h>", function()
+      require("floaterm.api").switch_wins()
+    end, { buffer = state.buf })
 
-      require("volt").mappings {
-        bufs = { state.buf, state.sidebuf, state.barbuf },
-        after_close = function()
-          M.close_timers()
-          state.volt_set = false
-          state.terminals = nil
-          state.buf = nil
-          state.sidebuf = nil
-          state.barbuf = nil
-        end,
-      }
+    map({ "n", "t" }, "<C-j>", function()
+      require("floaterm.api").cycle_term_bufs "next"
+    end, { buffer = state.buf })
 
-      if state.config.mappings.term then
-        state.config.mappings.term(state.buf)
-      end
+    map({ "n", "t" }, "<C-k>", function()
+      require("floaterm.api").cycle_term_bufs "prev"
+    end, { buffer = state.buf })
+
+    require("volt").mappings {
+      bufs = { state.buf, state.sidebuf, state.barbuf },
+      after_close = function()
+        M.close_timers()
+        state.volt_set = false
+        state.terminals = nil
+        state.buf = nil
+        state.sidebuf = nil
+        state.barbuf = nil
+      end,
+    }
+
+    if state.config.mappings.term then
+      state.config.mappings.term(state.buf)
     end
+  end
 
-    M.add_term_buf_timer(buf)
-
-    if state.config.autoinsert then
-      vim.cmd.startinsert()
-    end
-  end)
+  vim.cmd.startinsert()
 end
 
 M.get_term_by_buf = function(buf)
@@ -100,23 +99,15 @@ M.get_term_by_buf = function(buf)
   end
 end
 
-M.add_term_buf_timer = function(buf)
-  if state.termbuf_session_timer then
-    state.termbuf_session_timer:stop()
-    state.termbuf_session_timer:close()
+M.get_buf_on_cursor = function()
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+
+  if not state.terminals[row] then
+    vim.notify("please place cursor on a valid terminal name!", vim.log.levels.WARN)
+    return
   end
 
-  state.termbuf_session_timer = vim.uv.new_timer()
-
-  local i = M.get_term_by_buf(buf)[1]
-
-  state.termbuf_session_timer:start(
-    0,
-    1000,
-    vim.schedule_wrap(function()
-      state.terminals[i].secs = state.terminals[i].secs + 1
-    end)
-  )
+  return row
 end
 
 M.close_timers = function()
