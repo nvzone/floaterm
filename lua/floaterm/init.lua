@@ -129,10 +129,12 @@ M.open = function()
 
   vim.bo[state.sidebuf].ft = "FloatermSidebar"
 
-  vim.api.nvim_create_autocmd("TermClose", {
+  api.nvim_create_autocmd("TermClose", {
     group = api.nvim_create_augroup("FloatermAu", { clear = true }),
     callback = function(args)
-      require("floaterm.api").delete_term(args.buf)
+       if utils.get_term_by_buf(args.buf) then
+        require("floaterm.api").delete_term(args.buf)
+      end
     end,
   })
 end

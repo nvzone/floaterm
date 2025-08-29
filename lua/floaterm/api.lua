@@ -60,8 +60,7 @@ M.delete_term = function(buf)
 
   if not buf then
     if #state.terminals == 1 then
-      vim.notify "Close the whole window by pressing q in normal mode!"
-      return
+      M.new_term()
     end
 
     local i = utils.get_buf_on_cursor()
@@ -78,7 +77,7 @@ M.delete_term = function(buf)
     table.remove(state.terminals, index)
 
     if method == "manual" then
-      vim.api.nvim_buf_delete(buf, { })
+      vim.api.nvim_buf_delete(buf, { force = true })
     end
 
     local total_lines = vim.api.nvim_buf_get_lines(state.sidebuf, 0, -1, false)
