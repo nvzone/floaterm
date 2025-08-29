@@ -132,8 +132,9 @@ M.open = function()
   api.nvim_create_autocmd("TermClose", {
     group = api.nvim_create_augroup("FloatermAu", { clear = true }),
     callback = function(args)
-       if utils.get_term_by_buf(args.buf) then
+      if state.lastevent ~= 'winclosed' and utils.get_term_by_buf(args.buf) then
         require("floaterm.api").delete_term(args.buf)
+        state.lastevent = "termclose"
       end
     end,
   })
@@ -145,6 +146,7 @@ M.toggle = function()
     api.nvim_win_close(state.barwin, false)
     api.nvim_win_close(state.sidewin, false)
     utils.close_timers()
+    state.lastevent = nil
     state.volt_set = false
     api.nvim_set_current_win(state.prev_win_focussed)
   else

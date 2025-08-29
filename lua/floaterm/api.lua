@@ -58,11 +58,11 @@ end
 M.delete_term = function(buf)
   local method = buf and "automatic" or "manual"
 
-  if not buf then
-    if #state.terminals == 1 then
-      M.new_term()
-    end
+  if #state.terminals == 1 then
+    M.new_term()
+  end
 
+  if not buf then
     local i = utils.get_buf_on_cursor()
     if i then
       buf = state.terminals[i].buf

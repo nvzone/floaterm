@@ -80,8 +80,17 @@ M.switch_buf = function(buf)
         state.buf = nil
         state.sidebuf = nil
         state.barbuf = nil
+        state.lastevent = nil
+        api.nvim_del_augroup_by_name "FloatermAu"
       end,
     }
+
+    api.nvim_create_autocmd("WinClosed", {
+      buffer = state.buf,
+      callback = function()
+        state.lastevent = "winclosed"
+      end,
+    })
 
     if state.config.mappings.term then
       state.config.mappings.term(state.buf)
@@ -111,9 +120,6 @@ M.get_buf_on_cursor = function()
 end
 
 M.close_timers = function()
-  state.termbuf_session_timer:stop()
-  state.termbuf_session_timer:close()
-  state.termbuf_session_timer = nil
   state.bar_redraw_timer:stop()
   state.bar_redraw_timer:close()
   state.bar_redraw_timer = nil
