@@ -9,6 +9,7 @@ local M = {
     border = false,
     autoinsert = true,
     size = { h = 60, w = 70 },
+    position = nil,
     -- must be functions
     mappings = { sidebar = nil, term = nil },
     terminals = {
