@@ -6,6 +6,7 @@ return function()
   map("n", "e", api.edit_name, { buffer = state.sidebuf })
   map("n", "a", api.new_term, { buffer = state.sidebuf })
   map("n", "d", api.delete_term, { buffer = state.sidebuf })
+  map("n", "<C-l>", api.switch_wins, { buffer = state.sidebuf })
 
   if state.config.mappings.sidebar then
     state.config.mappings.sidebar(state.sidebuf)
