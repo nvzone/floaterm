@@ -15,12 +15,14 @@ M.convert_buf2term = function(cmd)
   vim.fn.jobstart(cmd, { term = true })
 end
 
-M.new_term = function(name)
-  return {
+M.new_term = function(opts)
+  local defaults = {
     buf = api.nvim_create_buf(false, true),
     time = os.date "%H:%M",
-    name = name or "Terminal",
+    name = "Terminal",
   }
+
+  return vim.tbl_extend("force", defaults, opts or {})
 end
 
 M.add_keymap = function(key, buf)

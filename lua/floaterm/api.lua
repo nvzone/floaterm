@@ -16,16 +16,14 @@ M.edit_name = function()
 end
 
 M.new_term = function(opts)
-  local name
-
   if opts and opts.name then
     vim.ui.input({ prompt = "   Enter name: " }, function(input)
-      name = input
+      opts.name = input
       vim.api.nvim_echo({}, false, {})
     end)
   end
 
-  local details = utils.new_term(name)
+  local details = utils.new_term(opts)
   table.insert(state.terminals, details)
   utils.switch_buf(details.buf)
   utils.add_keymap(#state.terminals, details.buf)
