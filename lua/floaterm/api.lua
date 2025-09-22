@@ -16,7 +16,7 @@ M.edit_name = function()
 end
 
 M.new_term = function(opts)
-  if opts and opts.name then
+  if opts and opts.name == "auto" then
     vim.ui.input({ prompt = "   Enter name: " }, function(input)
       opts.name = input
       vim.api.nvim_echo({}, false, {})
@@ -25,7 +25,11 @@ M.new_term = function(opts)
 
   local details = utils.new_term(opts)
   table.insert(state.terminals, details)
-  utils.switch_buf(details.buf)
+
+  if not opts.hidden then
+    utils.switch_buf(details.buf)
+  end
+
   utils.add_keymap(#state.terminals, details.buf)
 end
 
