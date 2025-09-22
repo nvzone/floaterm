@@ -54,7 +54,7 @@ M.open = function()
     { " ", "exdarkborder" },
   }
 
-  local win_opts = {
+  state.term_win_opts = {
     row = 2,
     col = sidebar_w + (bordered and 2 or 1),
     win = state.sidewin,
@@ -102,16 +102,10 @@ M.open = function()
   volt.run(state.sidebuf, { h = sidebar_win_opts.height, w = sidebar_win_opts.width })
   volt.run(state.barbuf, { h = 1, w = bar_win_opts.width })
 
-  state.win = api.nvim_open_win(state.buf, true, win_opts)
+  state.win = api.nvim_open_win(state.buf, true, state.term_win_opts)
 
-  if bordered then
-    vim.wo[state.win].winhl = bordered and "Normal:normal,floatborder:comment"
-  else
-    vim.wo[state.win].winhl = "Normal:exdarkbg,floatBorder:exdarkborder"
-  end
-
+  utils.set_termwin_hl()
   utils.switch_buf(state.buf)
-
   volt_redraw(state.barbuf, "bar")
 
   require "floaterm.mappings"()
@@ -128,6 +122,17 @@ M.open = function()
   )
 
   vim.bo[state.sidebuf].ft = "FloatermSidebar"
+
+  api.nvim_create_autocmd("WinClosed", {
+    group = api.nvim_create_augroup("FloatermAu", { clear = true }),
+    callback = function(args)
+      vim.schedule(function()
+        if utils.get_term_by_buf(args.buf) then
+          require("floaterm.api").delete_term(args.buf)
+        end
+      end)
+    end,
+  })
 end
 
 M.toggle = function()

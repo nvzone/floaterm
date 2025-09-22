@@ -4,18 +4,15 @@ local volt_redraw = require("volt").redraw
 local M = {}
 
 M.edit_name = function()
-  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local row = utils.get_buf_on_cursor()
 
-  if not state.terminals[row] then
-    vim.notify("please place cursor on a valid terminal name!", vim.log.levels.WARN)
-    return
+  if row then
+    vim.ui.input({ prompt = "   Enter name: " }, function(input)
+      state.terminals[row].name = input
+      vim.api.nvim_echo({}, false, {})
+      volt_redraw(state.sidebuf, "bufs")
+    end)
   end
-
-  vim.ui.input({ prompt = "   Enter name: " }, function(input)
-    state.terminals[row].name = input
-    vim.api.nvim_echo({}, false, {})
-    volt_redraw(state.sidebuf, "bufs")
-  end)
 end
 
 M.new_term = function(opts)
@@ -56,6 +53,44 @@ M.cycle_term_bufs = function(direction)
 
   local new_index = (cur_index[1] + (direction == "prev" and -2 or 0)) % #state.terminals
   utils.switch_buf(state.terminals[new_index + 1].buf)
+end
+
+M.delete_term = function(buf)
+  local method = buf and "automatic" or "manual"
+
+  if not buf then
+    local i = utils.get_buf_on_cursor()
+    if i then
+      buf = state.terminals[i].buf
+    end
+  end
+
+  if buf then
+    local index = utils.get_term_by_buf(buf)[1]
+    local newbuf_i = (index == 1 and index + 1) or index - 1
+
+    table.remove(state.terminals, index)
+
+    if #state.terminals == 0 then
+      M.new_term()
+    end
+
+    newbuf_i = #state.terminals == 1 and 1 or newbuf_i
+
+    if method == "manual" then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+
+    utils.switch_buf(state.terminals[newbuf_i].buf)
+
+    local total_lines = vim.api.nvim_buf_get_lines(state.sidebuf, 0, -1, false)
+
+    vim.api.nvim_set_option_value("modifiable", true, { buf = state.sidebuf })
+    require("volt").set_empty_lines(state.sidebuf, #total_lines, 20)
+    vim.api.nvim_set_option_value("modifiable", true, { buf = state.sidebuf })
+
+    volt_redraw(state.sidebuf, "all")
+  end
 end
 
 return M
