@@ -58,10 +58,6 @@ end
 M.delete_term = function(buf)
   local method = buf and "automatic" or "manual"
 
-  if #state.terminals == 1 then
-    M.new_term()
-  end
-
   if not buf then
     local i = utils.get_buf_on_cursor()
     if i then
@@ -72,13 +68,20 @@ M.delete_term = function(buf)
   if buf then
     local index = utils.get_term_by_buf(buf)[1]
     local newbuf_i = (index == 1 and index + 1) or index - 1
-    utils.switch_buf(state.terminals[newbuf_i].buf)
 
     table.remove(state.terminals, index)
+
+    if #state.terminals == 0 then
+      M.new_term()
+    end
+
+    newbuf_i = #state.terminals == 1 and 1 or newbuf_i
 
     if method == "manual" then
       vim.api.nvim_buf_delete(buf, { force = true })
     end
+
+    utils.switch_buf(state.terminals[newbuf_i].buf)
 
     local total_lines = vim.api.nvim_buf_get_lines(state.sidebuf, 0, -1, false)
 

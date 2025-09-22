@@ -10,7 +10,7 @@ M.convert_buf2term = function(cmd)
     cmd = type(cmd) == "function" and cmd() or cmd
     cmd = { shell, "-c", cmd .. "; " .. shell }
   else
-    cmd = { shell, "-i" }
+    cmd = { shell }
   end
   vim.fn.jobstart(cmd, { term = true })
 end
@@ -37,6 +37,14 @@ M.gen_term_bufs = function()
   end
 end
 
+M.set_termwin_hl = function()
+  if state.config.border then
+    vim.wo[state.win].winhl = "Normal:normal,floatborder:comment"
+  else
+    vim.wo[state.win].winhl = "Normal:exdarkbg,floatBorder:exdarkborder"
+  end
+end
+
 M.switch_buf = function(buf)
   state.buf = buf
 
@@ -44,7 +52,8 @@ M.switch_buf = function(buf)
   volt_redraw(state.barbuf, "bar")
 
   if not api.nvim_win_is_valid(state.win) then
-    -- state.win = api.nvim_open_win(state.buf, true, state.term_win_opts)
+    state.win = api.nvim_open_win(state.buf, true, state.term_win_opts)
+    M.set_termwin_hl()
   end
 
   api.nvim_set_current_win(state.win)
@@ -80,17 +89,9 @@ M.switch_buf = function(buf)
         state.buf = nil
         state.sidebuf = nil
         state.barbuf = nil
-        state.lastevent = nil
         api.nvim_del_augroup_by_name "FloatermAu"
       end,
     }
-
-    api.nvim_create_autocmd("WinClosed", {
-      buffer = state.buf,
-      callback = function()
-        state.lastevent = "winclosed"
-      end,
-    })
 
     if state.config.mappings.term then
       state.config.mappings.term(state.buf)
@@ -101,7 +102,7 @@ M.switch_buf = function(buf)
 end
 
 M.get_term_by_buf = function(buf)
-  for i, v in ipairs(state.terminals) do
+  for i, v in ipairs(state.terminals or {}) do
     if buf == v.buf then
       return { i, v }
     end

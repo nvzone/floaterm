@@ -10,9 +10,7 @@ local M = {
     -- must be functions
     mappings = { sidebar = nil, term = nil },
     terminals = {
-      { name = "Terminal", cmd="fetch" },
-      { name = "Git" },
-      { name = "Terminal" , cmd='neofetch'},
+      { name = "Terminal" },
     },
   },
 }
