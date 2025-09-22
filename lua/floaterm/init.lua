@@ -30,9 +30,16 @@ M.open = function()
 
   local sidebar_w = 20
 
+  if conf.position then 
+     conf.position = type(conf.position) == 'table' and conf.position or conf.position()
+  end
+
+  local pos_row = conf.position and conf.position.row or (vim.o.lines / 2 - state.h / 2) - 1
+  local pos_col = conf.position and conf.position.col or (vim.o.columns / 2 - state.w / 2)
+
   local sidebar_win_opts = {
-    row = (vim.o.lines / 2 - state.h / 2) - 1,
-    col = (vim.o.columns / 2 - state.w / 2),
+    row = pos_row,
+    col = pos_col,
     width = sidebar_w,
     height = state.h,
     relative = "editor",

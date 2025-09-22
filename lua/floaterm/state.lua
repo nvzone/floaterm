@@ -7,6 +7,10 @@ local M = {
   config = {
     border = false,
     size = { h = 60, w = 70 },
+
+    -- { row , col } or fn() returning the table
+    position = nil,
+
     -- must be functions
     mappings = { sidebar = nil, term = nil },
     terminals = {
