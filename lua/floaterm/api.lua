@@ -16,7 +16,9 @@ M.edit_name = function()
 end
 
 M.new_term = function(opts)
-  if opts and opts.name == "auto" then
+  opts = opts or {}
+
+  if opts.name == "auto" then
     vim.ui.input({ prompt = "   Enter name: " }, function(input)
       opts.name = input
       vim.api.nvim_echo({}, false, {})
