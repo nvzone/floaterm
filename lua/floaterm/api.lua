@@ -47,7 +47,7 @@ M.cycle_term_bufs = function(direction)
     return
   end
 
-  local cur_index = utils.get_term_by_buf(state.buf)
+  local cur_index = utils.get_term_by_key(state.buf)
 
   if not cur_index then
     -- If not in a terminal, switch to the first one
@@ -70,7 +70,7 @@ M.delete_term = function(buf)
   end
 
   if buf then
-    local index = utils.get_term_by_buf(buf)[1]
+    local index = utils.get_term_by_key(buf)[1]
     local newbuf_i = (index == 1 and index + 1) or index - 1
 
     table.remove(state.terminals, index)
@@ -94,6 +94,27 @@ M.delete_term = function(buf)
     vim.api.nvim_set_option_value("modifiable", true, { buf = state.sidebuf })
 
     volt_redraw(state.sidebuf, "all")
+  end
+end
+
+M.send_cmd = function(opts)
+  if not state.terminals then
+    require("floaterm").open()
+    require("floaterm.api").new_term(opts)
+  else
+    opts.cmd = type(opts.cmd) == "string" and opts.cmd or opts.cmd()
+    opts.buf = opts.buf or state.buf
+    local bufdetails = utils.get_term_by_key(opts.buf)[2]
+
+    if opts.name then
+      bufdetails = utils.get_term_by_key(opts.name, "name")[2]
+    end
+
+    local job_id = vim.b[bufdetails.buf].terminal_job_id
+    vim.api.nvim_chan_send(job_id, opts.cmd .. " \n")
+    vim.api.nvim_buf_call(bufdetails.buf, function()
+      vim.cmd [[normal G]]
+    end)
   end
 end
 

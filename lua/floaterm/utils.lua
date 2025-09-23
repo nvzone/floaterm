@@ -103,9 +103,11 @@ M.switch_buf = function(buf)
   vim.cmd.startinsert()
 end
 
-M.get_term_by_buf = function(buf)
+M.get_term_by_key = function(tocompare, name)
+  name = name or "buf"
+
   for i, v in ipairs(state.terminals or {}) do
-    if buf == v.buf then
+    if tocompare == v[name] then
       return { i, v }
     end
   end
@@ -115,7 +117,7 @@ M.get_buf_on_cursor = function()
   local row = vim.api.nvim_win_get_cursor(0)[1]
 
   if not state.terminals[row] then
-    vim.notify("please place cursor on a valid terminal name!", vim.log.levels.WARN)
+    vim.notify("place cursor on the terminal name", vim.log.levels.WARN)
     return
   end
 

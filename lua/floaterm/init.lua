@@ -134,7 +134,7 @@ M.open = function()
     group = api.nvim_create_augroup("FloatermAu", { clear = true }),
     callback = function(args)
       vim.schedule(function()
-        if state.volt_set and utils.get_term_by_buf(args.buf) then
+        if state.volt_set and utils.get_term_by_key(args.buf) then
           require("floaterm.api").delete_term(args.buf)
         end
       end)
