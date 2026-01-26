@@ -44,7 +44,7 @@ M.open = function()
     height = state.h,
     relative = "editor",
     style = "minimal",
-    border = "single",
+    border = "rounded",
     zindex = 100,
   }
 
@@ -69,7 +69,7 @@ M.open = function()
     height = state.h - 3,
     relative = "win",
     style = "minimal",
-    border = bordered and "single" or colored_border,
+    border = bordered and "rounded" or colored_border,
     zindex = 100,
   }
 
@@ -83,7 +83,7 @@ M.open = function()
     height = 1,
     relative = "win",
     style = "minimal",
-    border = "single",
+    border = "rounded",
     zindex = 100,
   }
 
