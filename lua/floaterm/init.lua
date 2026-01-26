@@ -23,7 +23,7 @@ M.open = function()
 
   local border_style = "single"
   if type(state.config.border) == "string" then
-      border_style = state.config.border
+    border_style = state.config.border
   end
 
   utils.gen_term_bufs()
@@ -36,7 +36,7 @@ M.open = function()
   local sidebar_w = 20
 
   if conf.position then
-     conf.position = type(conf.position) == 'table' and conf.position or conf.position()
+    conf.position = type(conf.position) == "table" and conf.position or conf.position()
   end
 
   local pos_row = conf.position and conf.position.row or (vim.o.lines / 2 - state.h / 2) - 1
