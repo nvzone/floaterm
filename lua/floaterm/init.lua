@@ -21,6 +21,11 @@ M.open = function()
   local usr_terms = type(conf.terminals) == "table" and conf.terminals or conf.terminals()
   state.terminals = state.terminals or vim.tbl_deep_extend("force", {}, usr_terms)
 
+  local border_style = "single"
+  if type(state.config.border) == "string" then
+      border_style = state.config.border
+  end
+
   utils.gen_term_bufs()
   state.buf = state.buf or state.terminals[1].buf
 
@@ -30,7 +35,7 @@ M.open = function()
 
   local sidebar_w = 20
 
-  if conf.position then 
+  if conf.position then
      conf.position = type(conf.position) == 'table' and conf.position or conf.position()
   end
 
@@ -44,7 +49,7 @@ M.open = function()
     height = state.h,
     relative = "editor",
     style = "minimal",
-    border = "rounded",
+    border = border_style,
     zindex = 100,
   }
 
@@ -69,7 +74,7 @@ M.open = function()
     height = state.h - 3,
     relative = "win",
     style = "minimal",
-    border = bordered and "rounded" or colored_border,
+    border = bordered and border_style or colored_border,
     zindex = 100,
   }
 
@@ -83,7 +88,7 @@ M.open = function()
     height = 1,
     relative = "win",
     style = "minimal",
-    border = "rounded",
+    border = border_style,
     zindex = 100,
   }
 
