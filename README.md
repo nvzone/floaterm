@@ -36,6 +36,15 @@ A beautiful toggleable floating window for managing terminal buffers within Neov
 }
 ```
 
+## Border styles
+To change border style, use
+```lua
+
+{
+    border = true -- Defaults to "single". Set to "rounded" or "double" for those styles.
+}
+```
+
 ## Mappings
 
 This are the mappings for sidebar 
