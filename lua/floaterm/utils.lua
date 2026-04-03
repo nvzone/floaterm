@@ -130,6 +130,12 @@ M.get_buf_on_cursor = function()
   return row
 end
 
+M.get_selected_term_index = function()
+  local row = M.get_buf_on_cursor()
+  local term = M.get_term_by_key(state.buf)[1]
+  return row or term
+end
+
 M.close_timers = function()
   state.bar_redraw_timer:stop()
   state.bar_redraw_timer:close()
