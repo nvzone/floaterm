@@ -4,7 +4,7 @@ local volt_redraw = require("volt").redraw
 local M = {}
 
 M.edit_name = function()
-  local row = utils.get_buf_on_cursor()
+  local row = utils.get_selected_term_index()
 
   if row then
     vim.ui.input({ prompt = "   Enter name: " }, function(input)
@@ -63,7 +63,7 @@ M.delete_term = function(buf)
   local method = buf and "automatic" or "manual"
 
   if not buf then
-    local i = utils.get_buf_on_cursor()
+    local i = utils.get_selected_term_index()
     if i then
       buf = state.terminals[i].buf
     end
