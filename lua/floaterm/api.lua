@@ -6,6 +6,10 @@ local M = {}
 M.edit_name = function()
   local row = utils.get_buf_on_cursor()
 
+  if row == nil then
+    row = utils.get_term_by_key(state.buf)[1]
+  end
+
   if row then
     vim.ui.input({ prompt = "   Enter name: " }, function(input)
       state.terminals[row].name = input

@@ -116,6 +116,10 @@ M.get_term_by_key = function(tocompare, name)
 end
 
 M.get_buf_on_cursor = function()
+  local curwin = vim.api.nvim_get_current_win()
+  if curwin ~= state.sidewin then
+    return nil
+  end
   local row = vim.api.nvim_win_get_cursor(0)[1]
 
   if not state.terminals[row] then
