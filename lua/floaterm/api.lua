@@ -3,8 +3,11 @@ local utils = require "floaterm.utils"
 local volt_redraw = require("volt").redraw
 local M = {}
 
-M.edit_name = function()
+M.edit_name = function(useBuffer)
   local row = utils.get_buf_on_cursor()
+  if (useBuffer) then
+    row = utils.get_term_by_key(state.buf)[1]
+  end
 
   if row then
     vim.ui.input({ prompt = "   Enter name: " }, function(input)
