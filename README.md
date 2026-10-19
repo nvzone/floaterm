@@ -5,6 +5,12 @@ A beautiful toggleable floating window for managing terminal buffers within Neov
 ![floaterm-with-border](https://github.com/user-attachments/assets/8a51aeff-dcc5-477f-a282-9b48a1e5bf2b)
 ![floaterm-noborder](https://github.com/user-attachments/assets/15e19849-69e6-432b-8fd9-7ffaad872e28)
 
+
+- Youtube video showcasing it : 
+
+[![Watch on YouTube](https://markdown-videos-api.jorgenkh.no/url?url=https://www.youtube.com/watch?v=B8Ope3JbQ0I)](https://www.youtube.com/watch?v=B8Ope3JbQ0I)
+
+
 ## Install 
 
 ```lua 
